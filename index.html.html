@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator Signal Pro - AI Prediction System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 165, 0, 0.05) 0%, transparent 70%);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 107, 53, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff6b35;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b35;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px 80px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 107, 53, 0.15);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff6b35;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 107, 53, 0); }
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff 0%, #ff6b35 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h1 span {
+            color: #ff6b35;
+            -webkit-text-fill-color: #ff6b35;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            color: #fff;
+            padding: 18px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            padding: 18px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            border: 2px solid rgba(255, 107, 53, 0.5);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: #ff6b35;
+        }
+
+        /* Stats */
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #ff6b35;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        /* Live Signal Widget */
+        .signal-widget {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            margin: 40px auto 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .signal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .signal-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .signal-timer {
+            font-size: 14px;
+            color: #ff6b35;
+            font-weight: 600;
+        }
+
+        .signal-value {
+            font-size: 48px;
+            font-weight: 900;
+            color: #00ff88;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .signal-chart {
+            height: 60px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 255, 136, 0.3), transparent);
+        }
+
+        /* Social Proof */
+        .social-proof {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .avatars {
+            display: flex;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #0a0a0f;
+            margin-left: -10px;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .avatar:first-child {
+            margin-left: 0;
+        }
+
+        .social-text {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        .social-text strong {
+            color: #fff;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: #a0a0a0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 107, 53, 0.3);
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ff6b35;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: #a0a0a0;
+            line-height: 1.6;
+        }
+
+        /* Screenshot Section */
+        .screenshots {
+            padding: 100px 50px;
+            background: rgba(255, 107, 53, 0.03);
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .screenshot-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .screenshot-img {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: rgba(255, 107, 53, 0.3);
+        }
+
+        .screenshot-info {
+            padding: 25px;
+        }
+
+        .screenshot-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .screenshot-info p {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        .win-badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 50px 40px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.popular {
+            border-color: #ff6b35;
+            background: rgba(255, 107, 53, 0.05);
+            transform: scale(1.05);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .pricing-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .pricing-card .price {
+            font-size: 56px;
+            font-weight: 900;
+            color: #ff6b35;
+            margin: 20px 0;
+        }
+
+        .pricing-card .price span {
+            font-size: 18px;
+            color: #a0a0a0;
+            font-weight: 400;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+
+        .pricing-features li i {
+            color: #00ff88;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 50px;
+            border: 2px solid #ff6b35;
+            background: transparent;
+            color: #ff6b35;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pricing-btn:hover {
+            background: #ff6b35;
+            color: #fff;
+        }
+
+        .pricing-card.popular .pricing-btn {
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            color: #fff;
+            border: none;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 50px;
+            background: rgba(255, 107, 53, 0.03);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 60px auto 0;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .stars {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #d0d0d0;
+            margin-bottom: 25px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .author-info h4 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .author-info p {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 100px 50px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px 0;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .faq-question i {
+            color: #ff6b35;
+            transition: transform 0.3s;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+            color: #a0a0a0;
+            line-height: 1.7;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding-top: 20px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 120px 50px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 140, 66, 0.05));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta h2 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 20px;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 50px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand p {
+            color: #a0a0a0;
+            margin-top: 20px;
+            line-height: 1.7;
+        }
+
+        .footer-links h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ff6b35;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+
+        /* Notification Popup */
+        .notification-popup {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(30, 30, 40, 0.95);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 15px;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 9999;
+            transform: translateX(-400px);
+            transition: transform 0.5s;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification-popup.show {
+            transform: translateX(0);
+        }
+
+        .notification-popup img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+        }
+
+        .notification-text {
+            font-size: 14px;
+        }
+
+        .notification-text strong {
+            color: #ff6b35;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-top: 3px;
+        }
+
+        /* Urgency Banner */
+        .urgency-banner {
+            background: linear-gradient(90deg, #ff6b35, #ff8c42);
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 9998;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 10px;
+        }
+
+        .countdown-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: #1a1a2e;
+            border-radius: 24px;
+            padding: 50px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .modal h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .modal p {
+            color: #a0a0a0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .payment-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .payment-option:hover {
+            border-color: #ff6b35;
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .payment-option i {
+            font-size: 24px;
+            color: #ff6b35;
+        }
+
+        .payment-option div {
+            text-align: left;
+        }
+
+        .payment-option strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .payment-option span {
+            font-size: 13px;
+            color: #a0a0a0;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #a0a0a0;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .features-grid,
+            .screenshots-grid,
+            .pricing-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid,
+            .screenshots-grid,
+            .pricing-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s;
+        }
+
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-rocket"></i>
+            Aviator Signal Pro
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#screenshots">Proof</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <a href="#pricing" class="nav-cta">Get Access</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">
+                <i class="fas fa-bolt"></i>
+                AI-Powered Prediction System
+            </div>
+
+            <h1>Aviator Signal App<br><span>95% Accuracy</span> Signals</h1>
+
+            <p class="hero-subtitle">
+                Advanced AI algorithm analyzes game patterns in real-time.<br>
+                Get accurate signals before every round. Join 10,000+ winners.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="#pricing" class="btn-primary">
+                    <i class="fas fa-crown"></i>
+                    Get Instant Access
+                </a>
+                <a href="#features" class="btn-secondary">
+                    <i class="fas fa-play"></i>
+                    See How It Works
+                </a>
+            </div>
+
+            <!-- Live Signal Widget -->
+            <div class="signal-widget">
+                <div class="signal-header">
+                    <div class="signal-title">
+                        <div class="live-dot"></div>
+                        Live Signal
+                    </div>
+                    <div class="signal-timer">Next: <span id="countdown">15</span>s</div>
+                </div>
+                <div class="signal-value" id="signalValue">2.45x</div>
+                <div class="signal-chart">
+                    <div class="chart-line"></div>
+                </div>
+            </div>
+
+            <!-- Social Proof -->
+            <div class="social-proof">
+                <div class="avatars">
+                    <div class="avatar">JD</div>
+                    <div class="avatar">MK</div>
+                    <div class="avatar">AL</div>
+                    <div class="avatar">+9</div>
+                </div>
+                <div class="social-text">
+                    <strong>10,000+</strong> active users worldwide
+                </div>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Accuracy Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Signals Sent</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Live Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header scroll-reveal">
+            <h2>Why Choose Our System?</h2>
+            <p>Advanced technology meets user-friendly design. Everything you need to maximize your success.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI Algorithm</h3>
+                <p>Machine learning model trained on millions of game rounds to detect patterns and predict outcomes with high accuracy.</p>
+            </div>
+
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Real-Time Signals</h3>
+                <p>Get instant notifications before every round. Never miss a winning opportunity with our lightning-fast signal delivery.</p>
+            </div>
+
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Mobile App</h3>
+                <p>Download our Android APK for seamless access. Lightweight, fast, and works on any device without lag.</p>
+            </div>
+
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure & Private</h3>
+                <p>Your data is encrypted end-to-end. Anonymous accounts, no personal information required for access.</p>
+            </div>
+
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Live Analytics</h3>
+                <p>Track your performance with detailed statistics. Win rate, profit history, and signal accuracy dashboard.</p>
+            </div>
+
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>VIP Community</h3>
+                <p>Join our exclusive Telegram group. Share strategies, get tips from pros, and access premium signals 24/7.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="section-header scroll-reveal">
+            <h2>Winning Proof</h2>
+            <p>Real results from our users. See the power of AI predictions in action.</p>
+        </div>
+
+        <div class="screenshots-grid">
+            <div class="screenshot-card scroll-reveal">
+                <div class="screenshot-img">
+                    <i class="fas fa-chart-area"></i>
+                </div>
+                <div class="screenshot-info">
+                    <h3>Signal Dashboard</h3>
+                    <p>Real-time multiplier predictions with confidence score</p>
+                    <div class="win-badge">+245% Win</div>
+                </div>
+            </div>
+
+            <div class="screenshot-card scroll-reveal">
+                <div class="screenshot-img">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="screenshot-info">
+                    <h3>Win History</h3>
+                    <p>Track all your successful rounds and profit history</p>
+                    <div class="win-badge">+189% Win</div>
+                </div>
+            </div>
+
+            <div class="screenshot-card scroll-reveal">
+                <div class="screenshot-img">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="screenshot-info">
+                    <h3>Instant Alerts</h3>
+                    <p>Get notified seconds before the perfect cash-out moment</p>
+                    <div class="win-badge">+312% Win</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header scroll-reveal">
+            <h2>Choose Your Plan</h2>
+            <p>Flexible pricing for every level. Start winning today with instant access.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card scroll-reveal">
+                <h3>Weekly</h3>
+                <div class="price">$5<span>/week</span></div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Basic AI Signals</li>
+                    <li><i class="fas fa-check"></i> Telegram Notifications</li>
+                    <li><i class="fas fa-check"></i> 5 Signals/Day</li>
+                    <li><i class="fas fa-check"></i> Email Support</li>
+                    <li><i class="fas fa-times"></i> VIP Group Access</li>
+                </ul>
+                <button class="pricing-btn" onclick="openModal('Weekly - $5')">Get Started</button>
+            </div>
+
+            <div class="pricing-card popular scroll-reveal">
+                <div class="popular-badge">MOST POPULAR</div>
+                <h3>Monthly</h3>
+                <div class="price">$15<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Advanced AI Signals</li>
+                    <li><i class="fas fa-check"></i> Instant Telegram + App</li>
+                    <li><i class="fas fa-check"></i> Unlimited Signals</li>
+                    <li><i class="fas fa-check"></i> 24/7 Priority Support</li>
+                    <li><i class="fas fa-check"></i> VIP Group Access</li>
+                </ul>
+                <button class="pricing-btn" onclick="openModal('Monthly - $15')">Get Started</button>
+            </div>
+
+            <div class="pricing-card scroll-reveal">
+                <h3>Lifetime</h3>
+                <div class="price">$30<span>one-time</span></div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Pro AI Signals</li>
+                    <li><i class="fas fa-check"></i> All Platforms</li>
+                    <li><i class="fas fa-check"></i> Unlimited Signals</li>
+                    <li><i class="fas fa-check"></i> Lifetime Updates</li>
+                    <li><i class="fas fa-check"></i> VIP + Admin Group</li>
+                </ul>
+                <button class="pricing-btn" onclick="openModal('Lifetime - $30')">Get Started</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-header scroll-reveal">
+            <h2>User Reviews</h2>
+            <p>See what our community says about their experience.</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card scroll-reveal">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"This app changed everything for me. The signals are incredibly accurate. Made back my subscription cost in the first day!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JD</div>
+                    <div class="author-info">
+                        <h4>James D.</h4>
+                        <p>Monthly Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card scroll-reveal">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"Best investment I made this year. The VIP group alone is worth the price. Real-time signals that actually work!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MK</div>
+                    <div class="author-info">
+                        <h4>Michael K.</h4>
+                        <p>Lifetime Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card scroll-reveal">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="testimonial-text">"Skeptical at first but the results speak for themselves. 90%+ accuracy is no joke. Highly recommend the monthly plan."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AL</div>
+                    <div class="author-info">
+                        <h4>Alex L.</h4>
+                        <p>Weekly Member</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="section-header scroll-reveal">
+            <h2>Frequently Asked</h2>
+            <p>Everything you need to know before getting started.</p>
+        </div>
+
+        <div class="faq-item scroll-reveal">
+            <div class="faq-question">
+                How accurate are the signals?
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                Our AI algorithm maintains a 95% accuracy rate based on historical data analysis. However, past performance doesn't guarantee future results. We recommend starting with small amounts.
+            </div>
+        </div>
+
+        <div class="faq-item scroll-reveal">
+            <div class="faq-question">
+                What payment methods do you accept?
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                We accept USDT (Crypto), manual payments via WhatsApp/Telegram with screenshot proof, and Stripe for card payments. After payment confirmation, your account is instantly unlocked.
+            </div>
+        </div>
+
+        <div class="faq-item scroll-reveal">
+            <div class="faq-question">
+                Is this a gambling guarantee?
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                No. Our service provides AI-based entertainment signals and predictions. We do not guarantee wins. Please use responsibly and never risk more than you can afford to lose.
+            </div>
+        </div>
+
+        <div class="faq-item scroll-reveal">
+            <div class="faq-question">
+                How do I access the app after purchase?
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                After payment, you'll receive login credentials via email. Download the APK from our secure server, log in, and start receiving signals immediately. VIP group access is also granted.
+            </div>
+        </div>
+
+        <div class="faq-item scroll-reveal">
+            <div class="faq-question">
+                Can I get a refund?
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                Due to the digital nature of our service, we don't offer refunds. However, you can start with the Weekly plan ($5) to test the system before committing to longer plans.
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="scroll-reveal">
+            <h2>Ready to Start Winning?</h2>
+            <p>Join thousands of users who are already using our AI signals. Instant access after payment.</p>
+            <a href="#pricing" class="btn-primary" style="font-size: 20px; padding: 20px 60px;">
+                <i class="fas fa-rocket"></i>
+                Get Access Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <i class="fas fa-rocket"></i>
+                    Aviator Signal Pro
+                </div>
+                <p>Advanced AI-powered prediction system for entertainment purposes. Our signals are generated using machine learning algorithms for pattern analysis.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#">Download App</a></li>
+                    <li><a href="#">Updates</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Telegram</a></li>
+                    <li><a href="#">WhatsApp</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Aviator Signal Pro. All rights reserved. For entertainment purposes only.</p>
+        </div>
+    </footer>
+
+    <!-- Notification Popup -->
+    <div class="notification-popup" id="notification">
+        <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ff6b35,#ff8c42);display:flex;align-items:center;justify-content:center;font-weight:700;">
+            <i class="fas fa-user" style="color:#fff;"></i>
+        </div>
+        <div class="notification-text">
+            <div><strong id="notifName">Alex</strong> just purchased <strong id="notifPlan">Monthly</strong></div>
+            <div class="notification-time">2 minutes ago</div>
+        </div>
+    </div>
+
+    <!-- Urgency Banner -->
+    <div class="urgency-banner">
+        <span>🔥 Limited Time: 50% OFF ends in:</span>
+        <div class="countdown">
+            <div class="countdown-item" id="hours">04</div>
+            <div class="countdown-item" id="minutes">32</div>
+            <div class="countdown-item" id="seconds">15</div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal" style="position:relative;">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <h3 id="modalTitle">Complete Your Purchase</h3>
+            <p>Choose your preferred payment method. Your account will be activated instantly after confirmation.</p>
+
+            <div class="payment-options">
+                <div class="payment-option" onclick="selectPayment('USDT')">
+                    <i class="fab fa-bitcoin"></i>
+                    <div>
+                        <strong>USDT (TRC20)</strong>
+                        <span>Crypto payment - Instant</span>
+                    </div>
+                </div>
+
+                <div class="payment-option" onclick="selectPayment('Manual')">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <strong>WhatsApp / Telegram</strong>
+                        <span>Manual payment with screenshot</span>
+                    </div>
+                </div>
+
+                <div class="payment-option" onclick="selectPayment('Stripe')">
+                    <i class="fas fa-credit-card"></i>
+                    <div>
+                        <strong>Credit Card (Stripe)</strong>
+                        <span>Secure card payment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Scroll reveal
+        const scrollElements = document.querySelectorAll('.scroll-reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        scrollElements.forEach(el => observer.observe(el));
+
+        // Signal countdown
+        let signalTime = 15;
+        setInterval(() => {
+            signalTime--;
+            if (signalTime <= 0) {
+                signalTime = 15;
+                // Update signal value
+                const multipliers = ['1.85x', '2.12x', '3.45x', '1.95x', '4.20x', '2.78x', '1.56x', '5.10x'];
+                document.getElementById('signalValue').textContent = multipliers[Math.floor(Math.random() * multipliers.length)];
+            }
+            document.getElementById('countdown').textContent = signalTime;
+        }, 1000);
+
+        // Notification popup
+        const names = ['James', 'Michael', 'Alex', 'David', 'Sarah', 'John', 'Emma', 'Chris'];
+        const plans = ['Weekly', 'Monthly', 'Lifetime'];
+
+        function showNotification() {
+            const popup = document.getElementById('notification');
+            document.getElementById('notifName').textContent = names[Math.floor(Math.random() * names.length)];
+            document.getElementById('notifPlan').textContent = plans[Math.floor(Math.random() * plans.length)];
+            popup.classList.add('show');
+
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 4000);
+        }
+
+        setInterval(showNotification, 15000);
+        setTimeout(showNotification, 3000);
+
+        // Urgency countdown
+        let totalSeconds = 4 * 3600 + 32 * 60 + 15;
+        setInterval(() => {
+            totalSeconds--;
+            if (totalSeconds <= 0) totalSeconds = 24 * 3600;
+
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+
+            document.getElementById('hours').textContent = String(h).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+        }, 1000);
+
+        // FAQ toggle
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('active');
+            });
+        });
+
+        // Modal
+        function openModal(plan) {
+            document.getElementById('modalTitle').textContent = plan;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function selectPayment(method) {
+            alert('Redirecting to ' + method + ' payment...\n\nIn production, this connects to your Firebase backend for payment processing and user activation.');
+            closeModal();
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
